@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet </title>
+
+    <!--leaflet css -->
+
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.79.0 /dist/L.Control.Locate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        footer {
+
+            padding: 15px;
+            border-radius: 36px;
+            text-align: center;
+            color: black;
+            background-color: rgb(172, 169, 165);
+            bottom: 5px;
+            position: fixed;
+            width: 95%;
+            margin-left: 15px;
+            font-size: 15px;
+            font-weight: bold;
+
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            /* Background color for dark mode */
+            color: #fff;
+            /* Text color for dark mode */
+        }
+
+        #welcome-message {
+            display: block;
+            /* Initially visible */
+            text-align: center;
+            padding: 100px;
+            background-color: #000;
+            /* Background color for dark mode */
+            color: #fff;
+            /* Text color for dark mode */
+        }
+
+        h1 {
+            font-size: 38px;
+            font-weight: bold;
+        }
+
+        #start-button {
+            display: inline-block;
+            padding: 20px;
+            background-color: #007BFF;
+            border-radius: 10px;
+            /* Button background color */
+            color: #fff;
+            /* Button text color */
+            font-size: 22px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        #title-bar {
+            text-align: center;
+            padding: 20px;
+            /* Apply the radial gradient background here */
+            background: linear-gradient(109.6deg, rgb(36, 45, 57) 11.2%, rgb(16, 37, 60) 51.2%, rgb(0, 0, 0) 98.6%);
+
+            font-size: 30px;
+            font-weight: bold;
+            /* Make the title bold */
+            color: white;
+            /* Text color for the title */
+        }
+
+        #map-container {
+            /*position: relative;*/
+            display: none;
+            width: 100%;
+            /* Adjust the height to leave space for the title bar and controls */
+            height: calc(100vh - 50px);
+            /* 50px accounts for the title bar and control height */
+        }
+
+        /* Add this CSS code to your existing styles */
+        /* Customize the shape of the search button */
+        .leaflet-control-geocoder-icon {
+            background-color: #007BFF;
+            /* Button background color */
+            border-radius: 100%;
+            /* Make it a circle */
+            padding: 20px;
+            /* Adjust padding as needed */
+            width: 20px;
+            /* Set the width and height for a circle */
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 500px;
+            font-size: 24px;
+        }
+
+        /* Customize the appearance of the layer control container when expanded */
+        .leaflet-control-geocoder-expanded {
+            background-color: #fff;
+            /* Background color when expanded */
+            color: #090707;
+            /* Text color when expanded */
+            border-radius: 22px;
+            /* Border radius when expanded */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            /* Add a shadow when expanded */
+            font-size: 17px;
+            padding-top: 5px;
+
+
+
+        }
+
+        /* Customize the color of the search icon */
+        .leaflet-control-geocoder-icon i {
+            color: #e1fdfd;
+            /* Icon color */
+        }
+
+        /* Center-align the placeholder text */
+        input::placeholder {
+            transform: translateY(-5px);
+        }
+
+
+        /* Add this CSS code to your existing styles */
+        /* Customize the appearance of the layer control button */
+        .leaflet-control-layers-toggle {
+            background-color: #007BFF;
+            /* Button background color */
+            color: #fff;
+            /* Button text color */
+            border-radius: 50%;
+            /* Make it a circle */
+            padding: 3px;
+            /* Adjust padding as needed */
+            width: 5px;
+            /* Set the width and height for a circle */
+            height: 5px;
+            text-align: center;
+            line-height: 10px;
+        }
+
+        /* Customize the appearance of the "+" icon for expanding the control */
+        .leaflet-control-layers-toggle i {
+            font-size: 32px;
+            /* Adjust icon size as needed */
+        }
+
+        /* Customize the appearance of the layer control container when expanded */
+        .leaflet-control-layers-expanded {
+            background-color: #fff;
+            /* Background color when expanded */
+            color: #090707;
+            /* Text color when expanded */
+            border-radius: 10px;
+            /* Border radius when expanded */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            /* Add a shadow when expanded */
+        }
+
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="welcome-message">
+        <h1>Welcome to Geo Maps</h1>
+        <p>Click the button below to access the map.</p>
+        <a id="start-button" href="#">GO TO MAP</a>
+    </div>
+
+    <div id="map-container">
+        <div id="title-bar">Geo Maps <i class="fa-solid fa-map-location-dot"></i></div>
+        <div id="map"></div>
+    </div>
+    <footer>
+        <p>&copy; 2023 GEO Maps . All rights reserved</p>
+    </footer>
+
+
+
+</body>
+
+</html>
+<!--leaflet javascript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="./line.js"></script>
+<script src="./point.js"></script>
+<script src="./polygon.js"></script>
+<script src="./india.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@v0.79.0/dist/L.Control.Locate.min.js"
+    charset="utf-8"></script>
+
+<script>
+    // Wait for the DOM to be fully loaded
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get references to the welcome message and map container
+        var welcomeMessage = document.getElementById("welcome-message");
+        var mapContainer = document.getElementById("map-container");
+
+        // Add an event listener to the "GO TO MAP" button
+        var startButton = document.getElementById("start-button");
+        startButton.addEventListener("click", function (event) {
+            // Prevent the default link behavior
+            event.preventDefault();
+
+            // Hide the welcome message and show the map container
+            welcomeMessage.style.display = "none";
+            mapContainer.style.display = "block";
+        });
+    });
+    // map intialization
+    var map = L.map('map').setView([28.6139, 77.2090], 13);
+
+    //osm map layer
+    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+
+    L.Control.geocoder({
+        placeholder: "Enter location...",
+        fontSize: '17px',
+        borderRadius: '20px',
+        border: '1px solid #ccc',
+        padding: '7px'
+    }).addTo(map);
+
+    osm.addTo(map);
+
+    //live location
+    L.control.locate().addTo(map);
+
+    //satellite map
+    googleSat = L.tileLayer('http://{s}.google.com/vt?lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+    // googleSat.addTo(map);
+
+    //terrain map
+    googleTerrain = L.tileLayer('http://{s}.google.com/vt?lyrs=p&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+    //googleTerrain.addTo(map);
+
+    //esri world imagery
+    var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    });
+    // Esri_WorldImagery.addTo(map);
+
+    //another dark map
+    var Drk_map = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
+    });
+    //Drk_map.addTo(map);
+
+
+    //dark map
+    var dark_map = L.tileLayer('https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token={accessToken}', {
+        attribution: '<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        minZoom: 0,
+        maxZoom: 22,
+        subdomains: 'abcd',
+        accessToken: '<your accessToken>'
+    });
+
+
+    //dark_map.addTo(map); has a PROBLEM ***
+
+    //marker
+
+    var myIcon = L.icon({
+        iconUrl: 'pin1.png',
+        iconSize: [50, 50],
+
+    });
+
+
+    var singlemarker = L.marker([28.6139, 77.2090], { icon: myIcon });
+    singlemarker.addTo(map);
+
+    //popup
+    var popup = singlemarker.bindPopup('This is Delhi ' + singlemarker.getLatLng()).openPopup();
+    popup.addTo(map);
+
+    //second marker
+    var secmarker = L.marker([12.9716, 77.5946], { icon: myIcon });
+    var popup = secmarker.bindPopup('This is Banglore').openPopup();
+    popup.addTo(map);
+
+    //third marker
+    var thirdmarker = L.marker([19.0760, 72.8777], { icon: myIcon });
+    var popup = thirdmarker.bindPopup('This is Mumbai').openPopup();
+    popup.addTo(map);
+
+    //fourth marker
+    var fourthmarker = L.marker([17.6868, 83.2185], { icon: myIcon });
+    var popup = fourthmarker.bindPopup('This is Vizag').openPopup();
+    popup.addTo(map);
+
+    // fifth marker
+    var fifthmarker = L.marker([22.5726, 88.3639], { icon: myIcon });
+    var popup = fifthmarker.bindPopup('This is Kolkata').openPopup();
+    popup.addTo(map);
+
+
+    //sixth marker
+    var sixthmarker = L.marker([21.1458, 79.0882], { icon: myIcon });
+    var popup = sixthmarker.bindPopup('This is Nagpur').openPopup();
+    popup.addTo(map);
+
+    //india markup
+
+    var indiadata = L.geoJSON(indiaJson, {
+        style: {
+            fillColor: '#e6f598',
+            fillOpacity: 1,
+            color: 'blue',
+            weight: 2
+        }
+    });
+
+    //AU markup
+    var polydata = L.geoJSON(polygonJson, {
+        style: {
+
+            fillColor: '#FFA500',
+            fillOpacity: 0.5,
+            color: 'black',
+            weight: 2
+        }
+    });
+    var popup = polydata.bindPopup('This is AU north campus').openPopup();
+    popup.addTo(map);
+
+    //beaches markup
+    var pointdata = L.geoJSON(pointJson, {
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup('<b> name: </b>' + feature.properties.name)
+        }
+    });
+
+    // geojson layer
+
+    // L.geoJSON(pointJson).addTo(map)
+    //L.geoJSON(lineJson).addTo(map)
+    // L.geoJson(indiaJson).addTo(map);  //to add india into a layer
+
+    // layer controller
+    var baseMaps = {
+        "OpenStreetMap": osm,
+        "Dark mode ": Drk_map,
+        " Google satellite map": googleSat,
+        "Google terrain map": googleTerrain,
+        " World imagery map": Esri_WorldImagery
+    };
+
+    var overlayMaps = {
+        "Delhi": singlemarker,
+        "Banglore": secmarker,
+        "Mumbai": thirdmarker,
+        "Vizag": fourthmarker,
+        "Nagpur": sixthmarker,
+        "Kolkata": fifthmarker,
+        "Beaches": pointdata,
+        "AU campus": polydata,
+        "India": indiadata
+
+    };
+
+    var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+    // Zoom to feature when checkbox is clicked
+    layerControl._layers.forEach(function (obj) {
+        obj.layer.on('add', function () {
+            map.fitBounds(obj.layer.getBounds());
+        });
+    });
+
+
+
+</script>
